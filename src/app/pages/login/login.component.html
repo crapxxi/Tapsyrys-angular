@@ -1,0 +1,33 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-title">Вход</h1>
+    <p class="auth-subtitle">Войдите в свой аккаунт</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @if (error) {
+        <div class="error-msg">{{ error }}</div>
+      }
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="email@example.com" />
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <span class="field-error">Введите корректный email</span>
+        }
+      </div>
+      <div class="field">
+        <label for="password">Пароль</label>
+        <input id="password" type="password" formControlName="password" placeholder="••••••••" />
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <span class="field-error">Минимум 6 символов</span>
+        }
+      </div>
+      <button type="submit" class="btn btn-primary auth-submit" [disabled]="loading">
+        {{ loading ? 'Вход...' : 'Войти' }}
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Нет аккаунта? <a routerLink="/signup">Зарегистрироваться</a>
+    </p>
+  </div>
+</div>

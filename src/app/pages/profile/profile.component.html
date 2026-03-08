@@ -1,0 +1,79 @@
+<div class="profile-page">
+  <h1 class="page-title">Мой Профиль</h1>
+  <div class="profile-summary">
+    <div class="avatar">👤</div>
+    <div>
+      <p class="org-name">{{ user?.organizationName }}</p>
+      <p class="role">{{ user?.role }}</p>
+    </div>
+  </div>
+  <div class="profile-layout">
+    <div class="profile-form-block">
+      <form [formGroup]="form" (ngSubmit)="save()" class="profile-form">
+        <div class="field">
+          <label>Название организации</label>
+          <input formControlName="organizationName" />
+        </div>
+        <div class="field">
+          <label>ИИН</label>
+          <input formControlName="iin" />
+        </div>
+        <div class="field">
+          <label>Контактное лицо</label>
+          <input formControlName="contactPerson" />
+        </div>
+        <div class="field">
+          <label>Телефон</label>
+          <input formControlName="phone" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input formControlName="email" type="email" />
+        </div>
+        <button type="submit" class="btn btn-primary save-btn">Сохранить изменения</button>
+      </form>
+    </div>
+    <aside class="profile-sidebar">
+      <div class="sidebar-block">
+        <h3>Адреса доставки</h3>
+        @for (addr of addresses; track addr.id) {
+          <div class="address-pill">
+            <span class="star">{{ addr.default ? '★' : '☆' }}</span>
+            <span>{{ addr.name }}</span>
+            <span class="addr-detail">{{ addr.detail }}</span>
+          </div>
+        }
+        <button type="button" class="btn btn-outline-green add-address">Добавить адрес</button>
+      </div>
+      <div class="sidebar-block">
+        <h3>Безопасность</h3>
+        <a href="#" class="sidebar-link">Изменить пароль →</a>
+        <div class="toggle-row">
+          <span>Двухфакторная аутентификация</span>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="twoFactor" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="sidebar-block">
+        <h3>Уведомление</h3>
+        <div class="toggle-row">
+          <span>Email уведомление</span>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="emailNotifications" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span>SMS уведомление</span>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="smsNotifications" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline logout-btn" (click)="logout()">Выйти из аккаунта</button>
+    </aside>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="cart-page">
+  <h1 class="page-title">Моя корзина</h1>
+  @if (cart.cart().length === 0) {
+    <p class="empty-cart">Корзина пуста. <a routerLink="/catalog">Перейти в каталог</a></p>
+  } @else {
+    <div class="cart-items">
+      @for (item of cart.cart(); track item.id) {
+        <div class="cart-row">
+          <div class="cart-item-image">
+            <span class="placeholder">📦</span>
+          </div>
+          <div class="cart-item-info">
+            <h3 class="cart-item-name">{{ item.name }}</h3>
+            <p class="cart-item-supplier">{{ item.supplier }}</p>
+          </div>
+          <div class="cart-item-qty">
+            <button type="button" class="qty-btn" (click)="updateQty(item.id, -1)">−</button>
+            <span class="qty-value">{{ item.quantity }}</span>
+            <button type="button" class="qty-btn" (click)="updateQty(item.id, 1)">+</button>
+          </div>
+          <div class="cart-item-price">{{ item.price | number }} ₸/шт</div>
+          <div class="cart-item-total">{{ (item.price * item.quantity) | number }} ₸</div>
+          <button type="button" class="remove-btn" aria-label="Удалить" (click)="remove(item.id)">✕</button>
+        </div>
+      }
+    </div>
+    <div class="cart-footer">
+      <div class="summary">
+        <p class="summary-row">Сумма заказа: <strong>{{ cart.total() | number }} ₸</strong></p>
+        <p class="summary-row">НДС (12%): <strong>{{ cart.vat() | number }} ₸</strong></p>
+        <p class="summary-row total">Итого к оплате: <strong>{{ cart.totalWithVat() | number }} ₸</strong></p>
+      </div>
+      <div class="actions">
+        <a routerLink="/catalog" class="btn btn-outline">Продолжить покупки</a>
+        <button type="button" class="btn btn-primary">Оформить заказ</button>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,50 @@
+@if (auth.isAuthenticated()) {
+  <div class="orders-page" >
+    <h1 class="page-title">Мои заказы</h1>
+    <div class="toolbar">
+      <div class="sort-row">
+        <span class="label">Сортировать по</span>
+        <select class="select" [(ngModel)]="sortBy">
+          <option value="date">Дата</option>
+          <option value="amount">Сумма</option>
+          </select>
+      </div>
+      <div class="sort-row">
+        <span class="label">Статус</span>
+        <select class="select" [(ngModel)]="statusFilter">
+          <option value="in_progress">В обработке</option>
+          <option value="delivered">Доставлен</option>
+          <option value="cancelled">Отменен</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>№ Заказа</th>
+            <th>Дата</th>
+            <th>Статус</th>
+            <th>Сумма</th>
+            <th>Поставщик</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track order.id) {
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.date }}</td>
+              <td><span class="badge" [ngClass]="getStatusClass(order.status)">{{ getStatusText(order.status) }}</span></td>
+              <td>{{ order.amount | number }} ₸</td>
+              <td>{{ order.supplier }}</td>
+              <td><a [routerLink]="['/orders', order.id]" class="btn btn-primary btn-sm">Подробнее</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+} @else {
+  <span class="badge-error">Авторизуйтесь для просмотра!</span>
+}

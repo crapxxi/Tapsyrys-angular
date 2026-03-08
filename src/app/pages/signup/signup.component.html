@@ -1,0 +1,61 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-title">Регистрация</h1>
+    <p class="auth-subtitle">Создайте аккаунт для работы с поставщиками</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @if (error) {
+        <div class="error-msg">{{ error }}</div>
+      }
+      <div class="field">
+        <label for="organizationName">Название организации</label>
+        <input id="organizationName" type="text" formControlName="organizationName" placeholder="ТОО «Название»" />
+        @if (form.get('organizationName')?.invalid && form.get('organizationName')?.touched) {
+          <span class="field-error">Обязательное поле</span>
+        }
+      </div>
+      <div class="field">
+        <label for="iin">ИИН</label>
+        <input id="iin" type="text" formControlName="iin" placeholder="12 цифр" maxlength="12" />
+        @if (form.get('iin')?.invalid && form.get('iin')?.touched) {
+          <span class="field-error">ИИН — 12 цифр</span>
+        }
+      </div>
+      <div class="field">
+        <label for="contactPerson">Контактное лицо</label>
+        <input id="contactPerson" type="text" formControlName="contactPerson" placeholder="Иван Иванов" />
+        @if (form.get('contactPerson')?.invalid && form.get('contactPerson')?.touched) {
+          <span class="field-error">Обязательное поле</span>
+        }
+      </div>
+      <div class="field">
+        <label for="phone">Телефон</label>
+        <input id="phone" type="tel" formControlName="phone" placeholder="+7 (777) 123-45-67" />
+        @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+          <span class="field-error">Обязательное поле</span>
+        }
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="email@example.com" />
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <span class="field-error">Введите корректный email</span>
+        }
+      </div>
+      <div class="field">
+        <label for="password">Пароль</label>
+        <input id="password" type="password" formControlName="password" placeholder="Минимум 6 символов" />
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <span class="field-error">Минимум 6 символов</span>
+        }
+      </div>
+      <button type="submit" class="btn btn-primary auth-submit" [disabled]="loading">
+        {{ loading ? 'Регистрация...' : 'Зарегистрироваться' }}
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Уже есть аккаунт? <a routerLink="/login">Войти</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="search-results-page">
+  <div class="search-bar-row">
+    <input type="search"
+           class="search-input"
+           [value]="searchQuery"
+           [(ngModel)]="searchQuery" (keydown)="onSearch()"/>
+    <button type="button" class="btn btn-primary search-btn" (click)="onSearch()">Найти</button>
+  </div>
+  <h1 class="page-title">Результаты поиска по запросу "{{ searchQuery || '' }}"</h1>
+
+  <div class="content-layout">
+    <aside class="filters">
+      <h3 class="filters-title">Фильтры</h3>
+      <div class="filter-group">
+        <h4>Категория</h4>
+        @for (cat of categories; track cat.id) {
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [checked]="categoryFilter.has(cat.id)"
+              (change)="toggleCategory(cat.id)"
+            />
+            {{ cat.name }}
+          </label>
+        }
+      </div>
+      <div class="filter-group">
+        <h4>Цена</h4>
+        <p class="price-range">100 ₸ — 2000 ₸</p>
+      </div>
+      <div class="filter-group">
+        <h4>Поставщик</h4>
+        <label class="checkbox-label"><input type="checkbox" /> ТОО "Агро-Фуд"</label>
+        <label class="checkbox-label"><input type="checkbox" /> ИП "Свежесть"</label>
+      </div>
+    </aside>
+    <div class="results-header">
+      <span class="sort-label">Сортировать по:</span>
+      <select class="sort-select">
+        <option value="popularity">По популярности</option>
+        <option value="price">По цене</option>
+      </select>
+    </div>
+    <div class="products-grid">
+      @for (p of products.length ? products : []; track p.id) {
+        <app-product-card [product]="p" />
+      }
+    </div>
+  </div>
+</div>

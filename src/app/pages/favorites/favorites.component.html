@@ -1,0 +1,19 @@
+@if (auth.isAuthenticated()) {
+  <div class="favorites-page">
+    <h1 class="page-title">Избранное</h1>
+    <div class="toolbar">
+      <span class="label">Сортировать по</span>
+      <select class="select">
+        <option value="date">Дата добав</option>
+        <option value="price">Цена</option>
+      </select>
+    </div>
+    <div class="products-grid">
+      @for (p of products; track p.id) {
+        <app-product-card [product]="p" />
+      }
+    </div>
+  </div>
+} @else {
+  <span class="badge-error">Авторизуйтесь для просмотра!</span>
+}

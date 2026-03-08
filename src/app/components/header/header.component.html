@@ -1,0 +1,28 @@
+<header class="header">
+  <a routerLink="/" class="logo">
+    <span class="logo-icon"><img src="img/nav/logo.png" alt="logo" height="65" width="120"></span>
+  </a>
+  <nav class="nav">
+    <a routerLink="/catalog" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Каталог</a>
+    <a routerLink="/orders" routerLinkActive="active">Мои заказы</a>
+    <a routerLink="/favorites" routerLinkActive="active">Избранное</a>
+    <a routerLink="/help" routerLinkActive="active">Помощь</a>
+  </nav>
+  <div class="header-actions">
+    @if (auth.isAuthenticated()) {
+      <a routerLink="/profile" class="icon-btn" title="Мой профиль" aria-label="Профиль">
+        <span class="icon-user"><img src="img/nav/userIcon.png" height="35" width="35" alt="userIcon"> </span>
+      </a>
+    } @else {
+      <a routerLink="/login" class="icon-btn" title="Войти" aria-label="Войти">
+        <span class="icon-user"><img src="img/nav/userIcon.png" height="35" width="35" alt="userIcon"> </span>
+      </a>
+    }
+    <a routerLink="/cart" class="icon-btn cart-btn" title="Корзина" aria-label="Корзина">
+      <span class="icon-cart"><img src="img/nav/cartIcon.png" height="28" width="28" alt="cartIcon"> </span>
+      @if (cart.count() > 0) {
+        <span class="cart-badge">{{ cart.count() }}</span>
+      }
+    </a>
+  </div>
+</header>

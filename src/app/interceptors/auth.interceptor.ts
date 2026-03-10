@@ -12,19 +12,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const token = localStorage.getItem('tapsyrys_token');
   
-  console.log('[v0] Auth interceptor - URL:', req.url);
-  console.log('[v0] Auth interceptor - Token exists:', !!token);
-  if (token) {
-    console.log('[v0] Auth interceptor - Token value:', token.substring(0, 50) + '...');
-  }
-  
   if (token) {
     const authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('[v0] Auth interceptor - Request headers:', authReq.headers.get('Authorization')?.substring(0, 60) + '...');
     return next(authReq);
   }
   

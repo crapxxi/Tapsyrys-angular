@@ -60,10 +60,10 @@ export interface SupplierProductResponse {
 
 // ---------- Auth Response ----------
 
-export interface AuthResponse {
+// JWT response from backend
+export interface JwtResponse {
   token: string;
-  user: ShopResponse | SupplierResponse;
-  userType: 'shop' | 'supplier';
+  type: string; // "Bearer"
 }
 
 // ---------- Category (Frontend only) ----------

@@ -42,11 +42,16 @@ export class LoginComponent {
       ? this.auth.loginShop({ phone, password })
       : this.auth.loginSupplier({ phone, password });
 
+    console.log('[v0] Login attempt - userType:', this.userType, 'phone:', phone);
+    
     loginObservable.subscribe({
-      next: () => {
+      next: (res) => {
+        console.log('[v0] Login success - response:', res);
+        console.log('[v0] Token stored:', localStorage.getItem('tapsyrys_token'));
         this.router.navigate(['/']);
       },
       error: (err) => {
+        console.log('[v0] Login error:', err);
         this.error = err?.error?.message || 'Ошибка входа. Проверьте данные.';
         this.loading = false;
       },

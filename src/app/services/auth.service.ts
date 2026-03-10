@@ -11,7 +11,7 @@ import {
   SupplierSignupRequest,
   ShopResponse,
   SupplierResponse,
-  AuthResponse,
+  JwtResponse,
 } from '../models/api.models';
 
 // Re-export for backwards compatibility
@@ -66,15 +66,15 @@ export class AuthService {
   // Shop Auth
   // ==========================================
 
-  loginShop(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(this.apiConfig.auth.shopLogin, credentials).pipe(
-      tap((res) => this.handleAuthSuccess(res, 'shop'))
+  loginShop(credentials: LoginRequest): Observable<JwtResponse> {
+    return this.http.post<JwtResponse>(this.apiConfig.auth.shopLogin, credentials).pipe(
+      tap((res) => this.handleJwtSuccess(res, 'shop', credentials.phone))
     );
   }
 
-  signupShop(data: ShopSignupRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(this.apiConfig.auth.shopSignup, data).pipe(
-      tap((res) => this.handleAuthSuccess(res, 'shop'))
+  signupShop(data: ShopSignupRequest): Observable<JwtResponse> {
+    return this.http.post<JwtResponse>(this.apiConfig.auth.shopSignup, data).pipe(
+      tap((res) => this.handleJwtSuccess(res, 'shop', data.phone, data.name))
     );
   }
 
@@ -82,15 +82,15 @@ export class AuthService {
   // Supplier Auth
   // ==========================================
 
-  loginSupplier(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(this.apiConfig.auth.supplierLogin, credentials).pipe(
-      tap((res) => this.handleAuthSuccess(res, 'supplier'))
+  loginSupplier(credentials: LoginRequest): Observable<JwtResponse> {
+    return this.http.post<JwtResponse>(this.apiConfig.auth.supplierLogin, credentials).pipe(
+      tap((res) => this.handleJwtSuccess(res, 'supplier', credentials.phone))
     );
   }
 
-  signupSupplier(data: SupplierSignupRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(this.apiConfig.auth.supplierSignup, data).pipe(
-      tap((res) => this.handleAuthSuccess(res, 'supplier'))
+  signupSupplier(data: SupplierSignupRequest): Observable<JwtResponse> {
+    return this.http.post<JwtResponse>(this.apiConfig.auth.supplierSignup, data).pipe(
+      tap((res) => this.handleJwtSuccess(res, 'supplier', data.phone, data.name))
     );
   }
 
@@ -109,42 +109,79 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  private handleAuthSuccess(res: AuthResponse, type: 'shop' | 'supplier'): void {
-    const user = this.mapToUser(res.user, type);
+  /**
+   * Handle JWT response from backend.
+   * Since backend only returns { token, type }, we create a minimal user object
+   * from the login/signup data.
+   */
+  private handleJwtSuccess(
+    res: JwtResponse, 
+    userType: 'shop' | 'supplier', 
+    phone: string,
+    name?: string
+  ): void {
+    // Create minimal user from available data
+    const user: User = {
+      id: '', // Will be populated when we fetch user profile
+      organizationName: name || '',
+      role: userType === 'shop' ? 'Shop' : 'Supplier',
+      iin: '',
+      contactPerson: name || '',
+      phone: phone,
+      email: '',
+    };
     
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(this.TOKEN_KEY, res.token);
       localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-      localStorage.setItem(this.USER_TYPE_KEY, type);
+      localStorage.setItem(this.USER_TYPE_KEY, userType);
     }
     
     this.userSignal.set(user);
-    this.userTypeSignal.set(type);
+    this.userTypeSignal.set(userType);
   }
 
-  private mapToUser(response: ShopResponse | SupplierResponse, type: 'shop' | 'supplier'): User {
-    if (type === 'shop') {
-      const shop = response as ShopResponse;
-      return {
-        id: String(shop.id),
-        organizationName: shop.name,
-        role: 'Shop',
-        iin: '',
-        contactPerson: shop.name,
-        phone: shop.phone,
-        email: '',
-      };
-    } else {
-      const supplier = response as SupplierResponse;
-      return {
-        id: String(supplier.id),
-        organizationName: supplier.name,
-        role: 'Supplier',
-        iin: '',
-        contactPerson: supplier.name,
-        phone: supplier.phone,
-        email: '',
-      };
-    }
+  /**
+   * Fetch current user profile after login.
+   * Call this if you need full user details.
+   */
+  fetchShopProfile(id: number): Observable<ShopResponse> {
+    return this.http.get<ShopResponse>(this.apiConfig.shops.getById(id)).pipe(
+      tap((shop) => {
+        const user: User = {
+          id: String(shop.id),
+          organizationName: shop.name,
+          role: 'Shop',
+          iin: '',
+          contactPerson: shop.name,
+          phone: shop.phone,
+          email: '',
+        };
+        this.userSignal.set(user);
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+        }
+      })
+    );
+  }
+
+  fetchSupplierProfile(id: number): Observable<SupplierResponse> {
+    return this.http.get<SupplierResponse>(this.apiConfig.suppliers.getById(id)).pipe(
+      tap((supplier) => {
+        const user: User = {
+          id: String(supplier.id),
+          organizationName: supplier.name,
+          role: 'Supplier',
+          iin: '',
+          contactPerson: supplier.name,
+          phone: supplier.phone,
+          email: '',
+        };
+        this.userSignal.set(user);
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+        }
+      })
+    );
   }
 }

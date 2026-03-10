@@ -12,9 +12,9 @@
 
   <h2 class="section-title">Популярные категории</h2>
   <div class="categories-grid">
-    @for (cat of categories; track cat.id) {
+    @for (cat of categories; track cat.id; let first = $first) {
       <a [routerLink]="['/catalog/search']" [queryParams]="{ category: cat.id }" class="category-card">
-        <span class="category-icon"><img [ngSrc]="cat.icon ?? 'favicon.ico'" [alt]="cat.name" height="150" width="150"> </span>
+        <span class="category-icon"><img [ngSrc]="cat.icon ?? 'favicon.ico'" [alt]="cat.name" height="150" width="150" [priority]="first"> </span>
         <span class="category-name">{{ cat.name }}</span>
       </a>
     }

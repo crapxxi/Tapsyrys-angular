@@ -1,4 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID, Inject, AfterViewInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgOptimizedImage } from '@angular/common';
@@ -12,7 +13,7 @@ import { SupplierResponse, CATEGORIES, CategoryItem } from '../../models/api.mod
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.css',
 })
-export class CatalogComponent implements OnInit {
+export class CatalogComponent implements OnInit, AfterViewInit {
   private supplierService = inject(SupplierService);
   
   searchQuery = '';
@@ -20,11 +21,24 @@ export class CatalogComponent implements OnInit {
   suppliers: SupplierResponse[] = [];
   loading = false;
   error = '';
+  private isBrowser: boolean;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
-    this.loadSuppliers();
+    // Don't load on server to avoid hydration issues
+  }
+
+  ngAfterViewInit(): void {
+    // Load suppliers only in browser after view is initialized
+    if (this.isBrowser) {
+      setTimeout(() => this.loadSuppliers(), 0);
+    }
   }
 
   loadSuppliers(): void {
@@ -35,7 +49,8 @@ export class CatalogComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = err?.message || 'Ошибка загрузки поставщиков';
+        console.log('[v0] Suppliers load error:', err);
+        this.error = err?.error?.message || err?.message || 'Ошибка загрузки поставщиков';
         this.loading = false;
       }
     });

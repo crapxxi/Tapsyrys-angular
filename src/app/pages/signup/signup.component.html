@@ -1,33 +1,57 @@
 <div class="auth-page">
   <div class="auth-card">
     <h1 class="auth-title">Регистрация</h1>
-    <p class="auth-subtitle">Создайте аккаунт для работы с поставщиками</p>
+    <p class="auth-subtitle">Создайте аккаунт для работы</p>
+
+    <!-- User Type Toggle -->
+    <div class="user-type-toggle">
+      <button 
+        type="button" 
+        class="toggle-btn" 
+        [class.active]="userType === 'shop'"
+        (click)="setUserType('shop')">
+        Магазин
+      </button>
+      <button 
+        type="button" 
+        class="toggle-btn" 
+        [class.active]="userType === 'supplier'"
+        (click)="setUserType('supplier')">
+        Поставщик
+      </button>
+    </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
       @if (error) {
         <div class="error-msg">{{ error }}</div>
       }
+      
       <div class="field">
-        <label for="organizationName">Название организации</label>
-        <input id="organizationName" type="text" formControlName="organizationName" placeholder="ТОО «Название»" />
-        @if (form.get('organizationName')?.invalid && form.get('organizationName')?.touched) {
+        <label for="name">Название организации</label>
+        <input id="name" type="text" formControlName="name" placeholder="ТОО «Название»" />
+        @if (form.get('name')?.invalid && form.get('name')?.touched) {
           <span class="field-error">Обязательное поле</span>
         }
       </div>
-      <div class="field">
-        <label for="iin">ИИН</label>
-        <input id="iin" type="text" formControlName="iin" placeholder="12 цифр" maxlength="12" />
-        @if (form.get('iin')?.invalid && form.get('iin')?.touched) {
-          <span class="field-error">ИИН — 12 цифр</span>
-        }
-      </div>
-      <div class="field">
-        <label for="contactPerson">Контактное лицо</label>
-        <input id="contactPerson" type="text" formControlName="contactPerson" placeholder="Иван Иванов" />
-        @if (form.get('contactPerson')?.invalid && form.get('contactPerson')?.touched) {
-          <span class="field-error">Обязательное поле</span>
-        }
-      </div>
+
+      @if (userType === 'shop') {
+        <div class="field">
+          <label for="location">Адрес</label>
+          <input id="location" type="text" formControlName="location" placeholder="г. Алматы, ул. Абая 1" />
+        </div>
+      }
+
+      @if (userType === 'supplier') {
+        <div class="field">
+          <label for="category">Категория</label>
+          <input id="category" type="text" formControlName="category" placeholder="Продукты питания" />
+        </div>
+        <div class="field">
+          <label for="logoUrl">URL логотипа</label>
+          <input id="logoUrl" type="url" formControlName="logoUrl" placeholder="https://example.com/logo.png" />
+        </div>
+      }
+
       <div class="field">
         <label for="phone">Телефон</label>
         <input id="phone" type="tel" formControlName="phone" placeholder="+7 (777) 123-45-67" />
@@ -35,13 +59,7 @@
           <span class="field-error">Обязательное поле</span>
         }
       </div>
-      <div class="field">
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" placeholder="email@example.com" />
-        @if (form.get('email')?.invalid && form.get('email')?.touched) {
-          <span class="field-error">Введите корректный email</span>
-        }
-      </div>
+
       <div class="field">
         <label for="password">Пароль</label>
         <input id="password" type="password" formControlName="password" placeholder="Минимум 6 символов" />
@@ -49,6 +67,7 @@
           <span class="field-error">Минимум 6 символов</span>
         }
       </div>
+
       <button type="submit" class="btn btn-primary auth-submit" [disabled]="loading">
         {{ loading ? 'Регистрация...' : 'Зарегистрироваться' }}
       </button>

@@ -1,3 +1,6 @@
+// Re-export API models
+export * from './api.models';
+
 export interface Product {
   id: string;
   name: string;

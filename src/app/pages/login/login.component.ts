@@ -20,7 +20,7 @@ export class LoginComponent {
   loading = false;
 
   form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    phone: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
@@ -31,9 +31,10 @@ export class LoginComponent {
     }
     this.error = '';
     this.loading = true;
-    const { email, password } = this.form.getRawValue();
+    const { phone, password } = this.form.getRawValue();
 
-    this.auth.login({ email, password }).subscribe({
+    // Use loginDemo for testing, switch to login() for real API
+    this.auth.loginDemo({ phone, password }).subscribe({
       next: () => {
         this.router.navigate(['/']);
       },

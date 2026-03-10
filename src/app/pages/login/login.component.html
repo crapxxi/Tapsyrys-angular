@@ -8,10 +8,10 @@
         <div class="error-msg">{{ error }}</div>
       }
       <div class="field">
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" placeholder="email@example.com" />
-        @if (form.get('email')?.invalid && form.get('email')?.touched) {
-          <span class="field-error">Введите корректный email</span>
+        <label for="phone">Телефон</label>
+        <input id="phone" type="tel" formControlName="phone" placeholder="+7 (777) 123-45-67" />
+        @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+          <span class="field-error">Введите номер телефона</span>
         }
       </div>
       <div class="field">

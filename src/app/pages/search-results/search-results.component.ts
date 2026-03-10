@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { MOCK_PRODUCTS, MOCK_CATEGORIES } from '../../data/mock-data';
 import { Product } from '../../models';
@@ -8,7 +8,7 @@ import {FormsModule} from '@angular/forms';
 @Component({
   selector: 'app-search-results',
   standalone: true,
-  imports: [ProductCardComponent, RouterLink, FormsModule],
+  imports: [ProductCardComponent, FormsModule],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.css',
 })

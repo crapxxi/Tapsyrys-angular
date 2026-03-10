@@ -15,7 +15,7 @@ import {
 } from '../models/api.models';
 
 // Re-export for backwards compatibility
-export { LoginRequest, ShopSignupRequest, SupplierSignupRequest };
+export type { LoginRequest, ShopSignupRequest, SupplierSignupRequest };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

@@ -1,9 +1,9 @@
 // ==========================================
 // API Request/Response Models
-// Matching Java Backend DTOs
+// Matching Java Backend OpenAPI Spec
 // ==========================================
 
-// ---------- Auth ----------
+// ---------- Auth Requests ----------
 
 export interface LoginRequest {
   phone: string;
@@ -25,7 +25,7 @@ export interface SupplierSignupRequest {
   logoUrl: string;
 }
 
-// ---------- Responses ----------
+// ---------- Entity Responses ----------
 
 export interface ShopResponse {
   id: number;
@@ -65,3 +65,21 @@ export interface AuthResponse {
   user: ShopResponse | SupplierResponse;
   userType: 'shop' | 'supplier';
 }
+
+// ---------- Category (Frontend only) ----------
+
+export interface CategoryItem {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+// Categories are hardcoded in frontend since API doesn't provide them
+export const CATEGORIES: CategoryItem[] = [
+  { id: '1', name: 'Молочные продукты', icon: 'img/catalog/milkIcon.png' },
+  { id: '2', name: 'Бакалея', icon: 'img/catalog/bakaleyaIcon.png' },
+  { id: '3', name: 'Напитки', icon: 'img/catalog/drinkIcon.png' },
+  { id: '4', name: 'Кондитерские изделия', icon: 'img/catalog/cakesIcon.png' },
+  { id: '5', name: 'Овощи и фрукты', icon: 'img/catalog/VeggieIcon.png' },
+  { id: '6', name: 'Мясо и птица', icon: 'img/catalog/meatIcon.png' },
+];

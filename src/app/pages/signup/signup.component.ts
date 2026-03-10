@@ -18,7 +18,6 @@ export class SignupComponent {
 
   error = '';
   loading = false;
-
   userType: 'shop' | 'supplier' = 'shop';
 
   form = this.fb.nonNullable.group({
@@ -43,9 +42,8 @@ export class SignupComponent {
     this.loading = true;
     const data = this.form.getRawValue();
 
-    // Use demo methods for testing, switch to signupShop()/signupSupplier() for real API
     if (this.userType === 'shop') {
-      this.auth.signupShopDemo({
+      this.auth.signupShop({
         name: data.name,
         location: data.location,
         phone: data.phone,
@@ -59,7 +57,7 @@ export class SignupComponent {
         complete: () => (this.loading = false),
       });
     } else {
-      this.auth.signupSupplierDemo({
+      this.auth.signupSupplier({
         name: data.name,
         category: data.category,
         phone: data.phone,

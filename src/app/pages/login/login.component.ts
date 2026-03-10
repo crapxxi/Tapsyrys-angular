@@ -18,11 +18,16 @@ export class LoginComponent {
 
   error = '';
   loading = false;
+  userType: 'shop' | 'supplier' = 'shop';
 
   form = this.fb.nonNullable.group({
     phone: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
+
+  setUserType(type: 'shop' | 'supplier'): void {
+    this.userType = type;
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -33,8 +38,11 @@ export class LoginComponent {
     this.loading = true;
     const { phone, password } = this.form.getRawValue();
 
-    // Use loginDemo for testing, switch to login() for real API
-    this.auth.loginDemo({ phone, password }).subscribe({
+    const loginObservable = this.userType === 'shop' 
+      ? this.auth.loginShop({ phone, password })
+      : this.auth.loginSupplier({ phone, password });
+
+    loginObservable.subscribe({
       next: () => {
         this.router.navigate(['/']);
       },

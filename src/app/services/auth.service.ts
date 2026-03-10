@@ -2,7 +2,7 @@ import { Injectable, signal, computed, PLATFORM_ID, Inject } from '@angular/core
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, of } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { User } from '../models';
 import { ApiConfigService } from './api-config.service';
 import {
@@ -48,8 +48,9 @@ export class AuthService {
     
     const storedUser = localStorage.getItem(this.USER_KEY);
     const storedType = localStorage.getItem(this.USER_TYPE_KEY) as 'shop' | 'supplier' | null;
+    const storedToken = localStorage.getItem(this.TOKEN_KEY);
     
-    if (storedUser) {
+    if (storedUser && storedToken) {
       this.userSignal.set(JSON.parse(storedUser));
       this.userTypeSignal.set(storedType);
     }
@@ -62,26 +63,40 @@ export class AuthService {
   }
 
   // ==========================================
-  // API Auth Methods
+  // Shop Auth
   // ==========================================
 
-  login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(this.apiConfig.auth.login, credentials).pipe(
-      tap((res) => this.handleAuthSuccess(res))
+  loginShop(credentials: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(this.apiConfig.auth.shopLogin, credentials).pipe(
+      tap((res) => this.handleAuthSuccess(res, 'shop'))
     );
   }
 
   signupShop(data: ShopSignupRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.apiConfig.auth.shopSignup, data).pipe(
-      tap((res) => this.handleAuthSuccess(res))
+      tap((res) => this.handleAuthSuccess(res, 'shop'))
+    );
+  }
+
+  // ==========================================
+  // Supplier Auth
+  // ==========================================
+
+  loginSupplier(credentials: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(this.apiConfig.auth.supplierLogin, credentials).pipe(
+      tap((res) => this.handleAuthSuccess(res, 'supplier'))
     );
   }
 
   signupSupplier(data: SupplierSignupRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.apiConfig.auth.supplierSignup, data).pipe(
-      tap((res) => this.handleAuthSuccess(res))
+      tap((res) => this.handleAuthSuccess(res, 'supplier'))
     );
   }
+
+  // ==========================================
+  // Common
+  // ==========================================
 
   logout(): void {
     if (typeof localStorage !== 'undefined') {
@@ -94,17 +109,17 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  private handleAuthSuccess(res: AuthResponse): void {
-    const user = this.mapToUser(res.user, res.userType);
+  private handleAuthSuccess(res: AuthResponse, type: 'shop' | 'supplier'): void {
+    const user = this.mapToUser(res.user, type);
     
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(this.TOKEN_KEY, res.token);
       localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-      localStorage.setItem(this.USER_TYPE_KEY, res.userType);
+      localStorage.setItem(this.USER_TYPE_KEY, type);
     }
     
     this.userSignal.set(user);
-    this.userTypeSignal.set(res.userType);
+    this.userTypeSignal.set(type);
   }
 
   private mapToUser(response: ShopResponse | SupplierResponse, type: 'shop' | 'supplier'): User {
@@ -131,81 +146,5 @@ export class AuthService {
         email: '',
       };
     }
-  }
-
-  // ==========================================
-  // Demo Methods (for testing without backend)
-  // ==========================================
-
-  /** For demo: login without API */
-  loginDemo(credentials: LoginRequest): Observable<boolean> {
-    const mockUser: User = {
-      id: '1',
-      organizationName: "ТОО 'Магазин у Абая'",
-      role: 'Shop',
-      iin: '123456789012',
-      contactPerson: 'Иван Иванов',
-      phone: credentials.phone,
-      email: '',
-    };
-    const mockToken = 'demo-token-' + Date.now();
-    
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem(this.TOKEN_KEY, mockToken);
-      localStorage.setItem(this.USER_KEY, JSON.stringify(mockUser));
-      localStorage.setItem(this.USER_TYPE_KEY, 'shop');
-    }
-    
-    this.userSignal.set(mockUser);
-    this.userTypeSignal.set('shop');
-    return of(true);
-  }
-
-  /** For demo: shop signup without API */
-  signupShopDemo(data: ShopSignupRequest): Observable<boolean> {
-    const mockUser: User = {
-      id: '1',
-      organizationName: data.name,
-      role: 'Shop',
-      iin: '',
-      contactPerson: data.name,
-      phone: data.phone,
-      email: '',
-    };
-    const mockToken = 'demo-token-' + Date.now();
-    
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem(this.TOKEN_KEY, mockToken);
-      localStorage.setItem(this.USER_KEY, JSON.stringify(mockUser));
-      localStorage.setItem(this.USER_TYPE_KEY, 'shop');
-    }
-    
-    this.userSignal.set(mockUser);
-    this.userTypeSignal.set('shop');
-    return of(true);
-  }
-
-  /** For demo: supplier signup without API */
-  signupSupplierDemo(data: SupplierSignupRequest): Observable<boolean> {
-    const mockUser: User = {
-      id: '1',
-      organizationName: data.name,
-      role: 'Supplier',
-      iin: '',
-      contactPerson: data.name,
-      phone: data.phone,
-      email: '',
-    };
-    const mockToken = 'demo-token-' + Date.now();
-    
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem(this.TOKEN_KEY, mockToken);
-      localStorage.setItem(this.USER_KEY, JSON.stringify(mockUser));
-      localStorage.setItem(this.USER_TYPE_KEY, 'supplier');
-    }
-    
-    this.userSignal.set(mockUser);
-    this.userTypeSignal.set('supplier');
-    return of(true);
   }
 }

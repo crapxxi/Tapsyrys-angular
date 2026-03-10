@@ -3,6 +3,25 @@
     <h1 class="auth-title">Вход</h1>
     <p class="auth-subtitle">Войдите в свой аккаунт</p>
 
+    <div class="user-type-toggle">
+      <button 
+        type="button" 
+        class="toggle-btn" 
+        [class.active]="userType === 'shop'"
+        (click)="setUserType('shop')"
+      >
+        Магазин
+      </button>
+      <button 
+        type="button" 
+        class="toggle-btn" 
+        [class.active]="userType === 'supplier'"
+        (click)="setUserType('supplier')"
+      >
+        Поставщик
+      </button>
+    </div>
+
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
       @if (error) {
         <div class="error-msg">{{ error }}</div>

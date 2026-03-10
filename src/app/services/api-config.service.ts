@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
  * API Configuration Service
  * Centralized configuration for all API endpoints.
  * 
+ * Base URL: http://localhost:8080/api/v1
+ * 
  * To change the backend URL:
  * 1. Update src/environments/environment.ts for development
  * 2. Update src/environments/environment.prod.ts for production
@@ -31,10 +33,14 @@ export class ApiConfigService {
   
   get auth() {
     return {
-      login: `${this._baseUrl}/auth/login`,
+      // POST /api/v1/auth/shop/login
+      shopLogin: `${this._baseUrl}/auth/shop/login`,
+      // POST /api/v1/auth/supplier/login
+      supplierLogin: `${this._baseUrl}/auth/supplier/login`,
+      // POST /api/v1/auth/shop/signup
       shopSignup: `${this._baseUrl}/auth/shop/signup`,
+      // POST /api/v1/auth/supplier/signup
       supplierSignup: `${this._baseUrl}/auth/supplier/signup`,
-      logout: `${this._baseUrl}/auth/logout`,
     };
   }
 
@@ -44,10 +50,10 @@ export class ApiConfigService {
 
   get shops() {
     return {
+      // GET /api/v1/shops
       getAll: `${this._baseUrl}/shops`,
+      // GET /api/v1/shops/{id}
       getById: (id: number) => `${this._baseUrl}/shops/${id}`,
-      update: (id: number) => `${this._baseUrl}/shops/${id}`,
-      delete: (id: number) => `${this._baseUrl}/shops/${id}`,
     };
   }
 
@@ -57,11 +63,10 @@ export class ApiConfigService {
 
   get suppliers() {
     return {
+      // GET /api/v1/suppliers
       getAll: `${this._baseUrl}/suppliers`,
+      // GET /api/v1/suppliers/{id}
       getById: (id: number) => `${this._baseUrl}/suppliers/${id}`,
-      getByCategory: (category: string) => `${this._baseUrl}/suppliers/category/${category}`,
-      update: (id: number) => `${this._baseUrl}/suppliers/${id}`,
-      delete: (id: number) => `${this._baseUrl}/suppliers/${id}`,
     };
   }
 
@@ -71,13 +76,12 @@ export class ApiConfigService {
 
   get products() {
     return {
+      // GET /api/v1/products
       getAll: `${this._baseUrl}/products`,
+      // GET /api/v1/products/{id}
       getById: (id: number) => `${this._baseUrl}/products/${id}`,
-      getByCategory: (category: string) => `${this._baseUrl}/products/category/${category}`,
-      search: (query: string) => `${this._baseUrl}/products/search?q=${encodeURIComponent(query)}`,
-      create: `${this._baseUrl}/products`,
-      update: (id: number) => `${this._baseUrl}/products/${id}`,
-      delete: (id: number) => `${this._baseUrl}/products/${id}`,
+      // POST /api/v1/products/add
+      add: `${this._baseUrl}/products/add`,
     };
   }
 
@@ -87,30 +91,12 @@ export class ApiConfigService {
 
   get supplierProducts() {
     return {
-      getAll: `${this._baseUrl}/supplier-products`,
-      getById: (id: number) => `${this._baseUrl}/supplier-products/${id}`,
-      getBySupplier: (supplierId: number) => `${this._baseUrl}/supplier-products/supplier/${supplierId}`,
-      getByProduct: (productId: number) => `${this._baseUrl}/supplier-products/product/${productId}`,
-      search: (query: string) => `${this._baseUrl}/supplier-products/search?q=${encodeURIComponent(query)}`,
-      create: `${this._baseUrl}/supplier-products`,
-      update: (id: number) => `${this._baseUrl}/supplier-products/${id}`,
-      delete: (id: number) => `${this._baseUrl}/supplier-products/${id}`,
-    };
-  }
-
-  // ==========================================
-  // Orders Endpoints
-  // ==========================================
-
-  get orders() {
-    return {
-      getAll: `${this._baseUrl}/orders`,
-      getById: (id: number) => `${this._baseUrl}/orders/${id}`,
-      getByShop: (shopId: number) => `${this._baseUrl}/orders/shop/${shopId}`,
-      getBySupplier: (supplierId: number) => `${this._baseUrl}/orders/supplier/${supplierId}`,
-      create: `${this._baseUrl}/orders`,
-      updateStatus: (id: number) => `${this._baseUrl}/orders/${id}/status`,
-      cancel: (id: number) => `${this._baseUrl}/orders/${id}/cancel`,
+      // GET /api/v1/supplier/products
+      getAll: `${this._baseUrl}/supplier/products`,
+      // GET /api/v1/supplier/products/{id}
+      getById: (id: number) => `${this._baseUrl}/supplier/products/${id}`,
+      // POST /api/v1/supplier/products/add
+      add: `${this._baseUrl}/supplier/products/add`,
     };
   }
 }

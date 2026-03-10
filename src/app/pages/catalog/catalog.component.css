@@ -125,10 +125,26 @@
   color: var(--color-star);
 }
 
-.supplier-desc {
+.supplier-desc,
+.supplier-category,
+.supplier-phone {
   margin: 0;
   font-size: 0.875rem;
   color: var(--color-text-muted);
+}
+
+.loading-text {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 2rem;
+}
+
+.error-text {
+  text-align: center;
+  color: var(--color-error);
+  padding: 1rem;
+  background: #fef2f2;
+  border-radius: var(--radius-md);
 }
 
 .promo-banner {

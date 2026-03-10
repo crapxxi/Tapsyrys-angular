@@ -1,30 +1,39 @@
 <div class="supplier-catalog-page">
-  <div class="supplier-layout">
-    <aside class="supplier-sidebar">
-      <div class="supplier-card">
-        <div class="supplier-logo"><img [ngSrc]="supplier.logoUrl ?? 'img/favicon.ico'" [alt]="supplier.name" width="75" height="75"></div>
-        <h2 class="supplier-name">{{ supplier.name }}</h2>
-        <p class="supplier-subtitle">Карточка поставщика</p>
-        <p class="supplier-rating">★ {{ supplier.rating }}</p>
-      </div>
-      <div class="filters-block">
-        <div class="about-company">
-          <h4>О компании:</h4>
-          <p>{{ supplier.description }}</p>
-          <p>Тел: {{ supplier.phone }}</p>
-          <p>Email: {{ supplier.email }}</p>
-          <p>Адрес: {{ supplier.address }}</p>
+  @if (loading) {
+    <p class="loading-text">Загрузка...</p>
+  }
+  @if (error) {
+    <p class="error-text">{{ error }}</p>
+  }
+  @if (supplier) {
+    <div class="supplier-layout">
+      <aside class="supplier-sidebar">
+        <div class="supplier-card">
+          <div class="supplier-logo"><img [ngSrc]="supplier.logoUrl || 'favicon.ico'" [alt]="supplier.name" width="75" height="75"></div>
+          <h2 class="supplier-name">{{ supplier.name }}</h2>
+          <p class="supplier-subtitle">Карточка поставщика</p>
+          <p class="supplier-category">{{ supplier.category }}</p>
+        </div>
+        <div class="filters-block">
+          <div class="about-company">
+            <h4>О компании:</h4>
+            <p>Категория: {{ supplier.category }}</p>
+            <p>Тел: {{ supplier.phone }}</p>
+          </div>
+        </div>
+      </aside>
+      <div class="catalog-main">
+        <button type="button" class="btn btn-outline contact-btn">Связаться с поставщиком</button>
+        <h1 class="catalog-title">Каталог товаров поставщика</h1>
+        <div class="products-grid">
+          @for (p of products; track p.id) {
+            <app-product-card [product]="p" [isLiked]="true" />
+          }
+          @empty {
+            <p class="empty-text">Нет товаров</p>
+          }
         </div>
       </div>
-    </aside>
-    <div class="catalog-main">
-      <button type="button" class="btn btn-outline contact-btn">Связаться с поставщиком</button>
-      <h1 class="catalog-title">Каталог товаров поставщика</h1>
-      <div class="products-grid">
-        @for (p of products; track p.id) {
-          <app-product-card [product]="p" [isLiked]="true" />
-        }
-      </div>
     </div>
-  </div>
+  }
 </div>

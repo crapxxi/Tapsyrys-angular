@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { CommonModule }            from '@angular/common';
+import { Router, RouterLink }      from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService }             from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,38 +12,32 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  private fb = inject(FormBuilder);
+  private fb   = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  error = '';
+  error   = '';
   loading = false;
 
   form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    phone:    ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   onSubmit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.error = '';
-    this.loading = true;
-    const { email, password } = this.form.getRawValue();
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
 
-    this.auth.login({ email, password }).subscribe({
-      next: () => {
-        this.router.navigate(['/']);
-      },
+    this.error   = '';
+    this.loading = true;
+    const { phone, password } = this.form.getRawValue();
+
+    this.auth.login({ phone, password }).subscribe({
+      next: () => this.router.navigate(['/']),
       error: (err) => {
-        this.error = err?.error?.message || 'Ошибка входа. Проверьте данные.';
+        this.error   = err?.error?.message ?? 'Ошибка входа. Проверьте данные.';
         this.loading = false;
       },
-      complete: () => {
-        this.loading = false;
-      },
+      complete: () => { this.loading = false; },
     });
   }
 }

@@ -14,30 +14,51 @@
   <div class="categories-grid">
     @for (cat of categories; track cat.id) {
       <a [routerLink]="['/catalog/search']" [queryParams]="{ category: cat.id }" class="category-card">
-        <span class="category-icon"><img [ngSrc]="cat.icon ?? 'favicon.ico'" [alt]="cat.name" height="150" width="150"> </span>
+        <span class="category-icon">
+          <img [ngSrc]="cat.icon ?? 'favicon.ico'" [alt]="cat.name" height="150" width="150">
+        </span>
         <span class="category-name">{{ cat.name }}</span>
       </a>
     }
   </div>
 
   <h2 class="section-title">Рекомендуемые поставщики</h2>
-  <div class="suppliers-section">
-    <div class="suppliers-row">
-      @for (s of suppliers; track s.id) {
-        <a [routerLink]="['/catalog/supplier', s.id]" class="supplier-card">
-          <div class="supplier-logo"><img [ngSrc]="s.logoUrl ?? 'favicon.ico'" [alt]="s.name" height="55" width="55"></div>
-          <h3 class="supplier-name">{{ s.name }}</h3>
-          <p class="supplier-rating">★ {{ s.rating }}</p>
-          <p class="supplier-desc">{{ s.description }}</p>
-        </a>
-      }
-    </div>
-    <div class="promo-banner">
-      <div class="promo-content">
-        <p class="promo-text">Скидка 15% на первый заказ у новых поставщиков!</p>
-        <button type="button" class="btn btn-primary promo-btn">Предложить</button>
+
+  @if (loading) {
+    <p class="loading-text">Загрузка поставщиков...</p>
+  } @else {
+    <div class="suppliers-section">
+      <div class="suppliers-row">
+        @for (s of suppliers; track s.id) {
+          <a [routerLink]="['/catalog/supplier', s.id]" class="supplier-card">
+            <div class="supplier-logo">
+              <img
+                [ngSrc]="s.logoUrl || 'img/catalog/complogo.png'"
+                [alt]="s.name"
+                height="55"
+                width="55"
+              />
+            </div>
+            <h3 class="supplier-name">{{ s.name }}</h3>
+            <p class="supplier-rating">★ {{ s.city }}</p>
+            <p class="supplier-desc">{{ s.category }}</p>
+          </a>
+        }
+
+        @if (!suppliers.length) {
+          <p class="empty-msg">Поставщики не найдены</p>
+        }
       </div>
-      <span class="promo-icon"><img src="img/catalog/sales.png" alt="promoIcon" height="75" width="75"> </span>
+
+      <div class="promo-banner">
+        <div class="promo-content">
+          <p class="promo-text">Скидка 15% на первый заказ у новых поставщиков!</p>
+          <button type="button" class="btn btn-primary promo-btn">Предложить</button>
+        </div>
+        <span class="promo-icon">
+          <img src="img/catalog/sales.png" alt="promoIcon" height="75" width="75">
+        </span>
+      </div>
     </div>
-  </div>
+  }
 </section>

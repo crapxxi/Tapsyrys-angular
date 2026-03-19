@@ -1,49 +1,67 @@
 @if (auth.isAuthenticated()) {
-  <div class="orders-page" >
+  <div class="orders-page">
     <h1 class="page-title">Мои заказы</h1>
+
+    @if (error) {
+      <div class="error-banner">{{ error }}</div>
+    }
+
     <div class="toolbar">
       <div class="sort-row">
         <span class="label">Сортировать по</span>
-        <select class="select" [(ngModel)]="sortBy">
+        <select class="select" [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
           <option value="date">Дата</option>
           <option value="amount">Сумма</option>
-          </select>
+        </select>
       </div>
       <div class="sort-row">
         <span class="label">Статус</span>
-        <select class="select" [(ngModel)]="statusFilter">
+        <select class="select" [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+          <option value="all">Все</option>
           <option value="in_progress">В обработке</option>
           <option value="delivered">Доставлен</option>
           <option value="cancelled">Отменен</option>
         </select>
       </div>
     </div>
-    <div class="table-wrap">
-      <table class="orders-table">
-        <thead>
-          <tr>
-            <th>№ Заказа</th>
-            <th>Дата</th>
-            <th>Статус</th>
-            <th>Сумма</th>
-            <th>Поставщик</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (order of orders; track order.id) {
+
+    @if (loading) {
+      <p class="loading-text">Загрузка заказов...</p>
+    } @else {
+      <div class="table-wrap">
+        <table class="orders-table">
+          <thead>
             <tr>
-              <td>#{{ order.id }}</td>
-              <td>{{ order.date }}</td>
-              <td><span class="badge" [ngClass]="getStatusClass(order.status)">{{ getStatusText(order.status) }}</span></td>
-              <td>{{ order.amount | number }} ₸</td>
-              <td>{{ order.supplier }}</td>
-              <td><a [routerLink]="['/orders', order.id]" class="btn btn-primary btn-sm">Подробнее</a></td>
+              <th>№ Заказа</th>
+              <th>Дата</th>
+              <th>Статус</th>
+              <th>Сумма</th>
+              <th>Поставщик</th>
             </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            @for (order of filteredOrders; track order.id) {
+              <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ formatDate(order.createdAt) }}</td>
+                <td>
+                  <span class="badge" [ngClass]="getStatusClass(order.status)">
+                    {{ getStatusText(order.status) }}
+                  </span>
+                </td>
+                <td>{{ (order.totalPrice ?? 0) | number }} ₸</td>
+                <td>{{ order.supplierName ?? '—' }}</td>
+              </tr>
+            }
+            @if (!filteredOrders.length) {
+              <tr>
+                <td colspan="5" class="empty-row">Заказов не найдено</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 } @else {
   <span class="badge-error">Авторизуйтесь для просмотра!</span>

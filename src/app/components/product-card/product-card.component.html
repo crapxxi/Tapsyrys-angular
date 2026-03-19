@@ -1,19 +1,41 @@
 @let p = product();
 <article class="product-card">
+  <button
+    type="button"
+    class="favorite-btn"
+    [class.liked]="liked || isLiked()"
+    (click)="toggleFavorite(p)"
+    aria-label="В избранное"
+  >
+    {{ (liked || isLiked()) ? '❤️' : '🤍' }}
+  </button>
+
   <div class="product-image">
     <span class="placeholder">📦</span>
   </div>
+
   <h3 class="product-name">{{ p.name }}</h3>
   <p class="product-supplier">{{ p.supplier }}</p>
   <p class="product-price">{{ p.price | number }} ₸/{{ p.unit }}</p>
-  <div class="product-status" [class.in-stock]="p.inStock" [class.out-of-stock]="!p.inStock">
+
+  <div
+    class="product-status"
+    [class.in-stock]="p.inStock"
+    [class.out-of-stock]="!p.inStock"
+  >
     @if (p.inStock) {
       <span>✓ В наличии</span>
     } @else {
       <span>✕ Нет в наличии</span>
     }
   </div>
-  <button type="button" class="btn btn-primary add-cart" [disabled]="!p.inStock" (click)="addToCart(p)">
+
+  <button
+    type="button"
+    class="btn btn-primary add-cart"
+    [disabled]="!p.inStock"
+    (click)="addToCart(p)"
+  >
     🛒 В корзину
   </button>
 </article>

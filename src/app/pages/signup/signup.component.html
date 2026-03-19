@@ -1,33 +1,29 @@
 <div class="auth-page">
   <div class="auth-card">
-    <h1 class="auth-title">Регистрация</h1>
+    <h1 class="auth-title">Регистрация магазина</h1>
     <p class="auth-subtitle">Создайте аккаунт для работы с поставщиками</p>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
       @if (error) {
         <div class="error-msg">{{ error }}</div>
       }
+
       <div class="field">
-        <label for="organizationName">Название организации</label>
-        <input id="organizationName" type="text" formControlName="organizationName" placeholder="ТОО «Название»" />
-        @if (form.get('organizationName')?.invalid && form.get('organizationName')?.touched) {
+        <label for="name">Название магазина</label>
+        <input id="name" type="text" formControlName="name" placeholder="Магазин «Уют»" />
+        @if (form.get('name')?.invalid && form.get('name')?.touched) {
           <span class="field-error">Обязательное поле</span>
         }
       </div>
+
       <div class="field">
-        <label for="iin">ИИН</label>
-        <input id="iin" type="text" formControlName="iin" placeholder="12 цифр" maxlength="12" />
-        @if (form.get('iin')?.invalid && form.get('iin')?.touched) {
-          <span class="field-error">ИИН — 12 цифр</span>
-        }
-      </div>
-      <div class="field">
-        <label for="contactPerson">Контактное лицо</label>
-        <input id="contactPerson" type="text" formControlName="contactPerson" placeholder="Иван Иванов" />
-        @if (form.get('contactPerson')?.invalid && form.get('contactPerson')?.touched) {
+        <label for="location">Адрес / город</label>
+        <input id="location" type="text" formControlName="location" placeholder="Алматы, ул. Абая 67" />
+        @if (form.get('location')?.invalid && form.get('location')?.touched) {
           <span class="field-error">Обязательное поле</span>
         }
       </div>
+
       <div class="field">
         <label for="phone">Телефон</label>
         <input id="phone" type="tel" formControlName="phone" placeholder="+7 (777) 123-45-67" />
@@ -35,13 +31,7 @@
           <span class="field-error">Обязательное поле</span>
         }
       </div>
-      <div class="field">
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" placeholder="email@example.com" />
-        @if (form.get('email')?.invalid && form.get('email')?.touched) {
-          <span class="field-error">Введите корректный email</span>
-        }
-      </div>
+
       <div class="field">
         <label for="password">Пароль</label>
         <input id="password" type="password" formControlName="password" placeholder="Минимум 6 символов" />
@@ -49,6 +39,7 @@
           <span class="field-error">Минимум 6 символов</span>
         }
       </div>
+
       <button type="submit" class="btn btn-primary auth-submit" [disabled]="loading">
         {{ loading ? 'Регистрация...' : 'Зарегистрироваться' }}
       </button>

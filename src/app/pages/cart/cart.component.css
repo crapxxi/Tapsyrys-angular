@@ -10,6 +10,28 @@
   font-weight: 700;
 }
 
+.success-banner {
+  padding: 1rem 1.25rem;
+  background: #dcfce7;
+  color: #15803d;
+  border-radius: var(--radius-lg);
+  font-size: 0.9375rem;
+}
+
+.success-banner a {
+  color: #15803d;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.error-banner {
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  color: var(--color-error);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
 .empty-cart {
   padding: 2rem;
   background: var(--color-surface);
@@ -79,6 +101,7 @@
   background: var(--color-surface);
   font-size: 1.25rem;
   line-height: 1;
+  cursor: pointer;
 }
 
 .qty-btn:hover {
@@ -111,9 +134,7 @@
   cursor: pointer;
 }
 
-.remove-btn:hover {
-  opacity: 0.9;
-}
+.remove-btn:hover { opacity: 0.9; }
 
 .cart-footer {
   display: flex;
@@ -143,4 +164,9 @@
 .actions {
   display: flex;
   gap: 0.75rem;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }

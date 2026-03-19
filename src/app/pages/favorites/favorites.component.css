@@ -10,6 +10,20 @@
   font-weight: 700;
 }
 
+.error-banner {
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  color: var(--color-error);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
+.loading-text,
+.empty-text {
+  color: var(--color-text-muted);
+  padding: 1rem 0;
+}
+
 .toolbar {
   display: flex;
   align-items: center;

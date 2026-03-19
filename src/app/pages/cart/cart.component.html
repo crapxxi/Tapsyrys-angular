@@ -1,8 +1,19 @@
 <div class="cart-page">
   <h1 class="page-title">Моя корзина</h1>
-  @if (cart.cart().length === 0) {
+
+  @if (checkoutSuccess) {
+    <div class="success-banner">
+      ✅ Заказ успешно оформлен! Перейдите в <a routerLink="/orders">«Мои заказы»</a> для отслеживания.
+    </div>
+  }
+
+  @if (checkoutError) {
+    <div class="error-banner">{{ checkoutError }}</div>
+  }
+
+  @if (cart.cart().length === 0 && !checkoutSuccess) {
     <p class="empty-cart">Корзина пуста. <a routerLink="/catalog">Перейти в каталог</a></p>
-  } @else {
+  } @else if (cart.cart().length > 0) {
     <div class="cart-items">
       @for (item of cart.cart(); track item.id) {
         <div class="cart-row">
@@ -24,6 +35,7 @@
         </div>
       }
     </div>
+
     <div class="cart-footer">
       <div class="summary">
         <p class="summary-row">Сумма заказа: <strong>{{ cart.total() | number }} ₸</strong></p>
@@ -32,7 +44,14 @@
       </div>
       <div class="actions">
         <a routerLink="/catalog" class="btn btn-outline">Продолжить покупки</a>
-        <button type="button" class="btn btn-primary">Оформить заказ</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="checkoutLoading"
+          (click)="placeOrder()"
+        >
+          {{ checkoutLoading ? 'Оформление...' : 'Оформить заказ' }}
+        </button>
       </div>
     </div>
   }

@@ -1,7 +1,8 @@
 import { Component, input } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
-import { Product } from '../../models';
-import { CartService } from '../../services/cart.service';
+import { DecimalPipe }      from '@angular/common';
+import { Product }          from '../../models';
+import { CartService }      from '../../services/cart.service';
+import { ProductService }   from '../../services/product.service';
 
 @Component({
   selector: 'app-product-card',
@@ -11,16 +12,23 @@ import { CartService } from '../../services/cart.service';
   styleUrl: './product-card.component.css',
 })
 export class ProductCardComponent {
-  product = input.required<Product>();
-  isLiked = input(false);
+  product  = input.required<Product>();
+  isLiked  = input(false);
 
-  constructor(private cart: CartService) {}
+  liked = false;
+
+  constructor(
+    private cart: CartService,
+    private productSvc: ProductService,
+  ) {}
 
   addToCart(p: Product): void {
     if (p.inStock) this.cart.addToCart(p);
   }
 
-  favoriteAction(): void {
-    // Favorites service can be added later; emit or call service
+  toggleFavorite(p: Product): void {
+    this.productSvc.toggleFavorite(Number(p.id)).subscribe({
+      next: () => { this.liked = !this.liked; },
+    });
   }
 }

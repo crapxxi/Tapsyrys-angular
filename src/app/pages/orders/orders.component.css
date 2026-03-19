@@ -10,6 +10,19 @@
   font-weight: 700;
 }
 
+.error-banner {
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  color: var(--color-error);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
+.loading-text {
+  color: var(--color-text-muted);
+  padding: 1rem 0;
+}
+
 .toolbar {
   display: flex;
   gap: 1.5rem;
@@ -66,6 +79,12 @@
 
 .orders-table tbody tr:nth-child(even) {
   background: var(--color-secondary);
+}
+
+.empty-row {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 2rem 1rem;
 }
 
 .btn-sm {
